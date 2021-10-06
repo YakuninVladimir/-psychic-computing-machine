@@ -8,7 +8,7 @@ function CreateWindow () {
     win = new BrowserWindow({
         width: 2000,
         height: 2000,
-        icon: "D:/photoshop shiza/van.jpg",
+        icon: "./van.jpg",
     });
 
     win.loadURL(format({
@@ -16,8 +16,6 @@ function CreateWindow () {
         protocol: "file:",
         slashes: true,
     }));
-
-    win.webContents.openDevTools();
 
     win.on('closed', () => win = null);
 }
