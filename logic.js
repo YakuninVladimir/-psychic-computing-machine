@@ -48,13 +48,10 @@ class Candle {
     }
 
     createCanvas () {
-        this.canvas = document.createElement('canvas');
+        this.canvas = document.getElementById('illustration');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        this.canvas.style.backgroundColor = 'rgb(255, 255 , 245)';
-        this.canvas.style.float = 'left';
         this.ctx = this.canvas.getContext('2d');
-        document.body.prepend(this.canvas);
     }
 
     drawFigure() {
@@ -150,7 +147,7 @@ class Candle {
                 y1 = newRayPoint.y,
                 y2 = crossingPoint.y;
 
-            this.angls[Math.round(180/Math.PI * this.candle.angle)][Math.round(180/Math.PI * Math.acos(incidenceAngleCos))] = 1;
+            this.angls[Math.round(180/Math.PI * this.candle.angle)][Math.round(180/Math.PI * Math.acos(Math.abs(incidenceAngleCos)))] = 1;
 
             return {
                 x: crossingPoint.x,
@@ -201,11 +198,7 @@ class Candle {
                     && Math.max(item.border.y1,item.border.y2) + 0.01>= Math.round(res.y)  && Math.round(res.y)  >= Math.min(item.border.y1,item.border.y2) - 0.01){
 
                     //collecting data
-                    this.data.forEach((item, index , array) => {
-                        if (item.side == i) {
-                            item.array.push({x : res.x ,y : res.y});
-                        }
-                    });
+
 
                     //updating intersection point data
                     if (!this.isVirgin || ( (res.y - this.candle.y) * Math.sin(this.candle.angle) >= 0 &&
@@ -215,6 +208,12 @@ class Candle {
                         crossingPoint.y = res.y;
                         crossingPoint.line = item;
                         crossingPoint.isExists = true;
+
+                        this.data.forEach((item, index , array) => {
+                            if (item.side == i) {
+                                item.array.push({x : res.x ,y : res.y});
+                            }
+                        });
 
                     }
                 }
