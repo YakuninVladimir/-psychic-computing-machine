@@ -1,5 +1,15 @@
-const step = Math.PI / 256;
+let step = Math.PI / 256;
 let figure = [];
+const figures = [
+    [{x:100, y:100}, {x:900, y:100}, {x:900, y:900}, {x:100, y:900}],
+    [{x:100, y:600}, {x:500, y:400}, {x:900, y:600}],
+    [{x:100, y:700}, {x:500, y:100}, {x:900, y:700}],
+    [{x:100, y:700}, {x:500, y:7}, {x:900, y:700}]
+];
+let startPoint = {
+  x: 500,
+  y: 500,
+};
 let tablesData = [];
 let stopAngle = Math.PI * 2;
 let isFigureDrawing = false;
@@ -7,13 +17,10 @@ let candle;
 let ctx = document.getElementById('illustration').getContext('2d');
 let angleData = [];
 let mainTablesData;
-
-const Deep = 5;
+let choosingStartPoint = false;
+let Deep;
 
 google.charts.load('current', {'packages':['corechart']});
-
-
-
 
 let drawDiagram = () => {
     //reformat angles
@@ -32,8 +39,8 @@ let drawDiagram = () => {
     let options = {
         pointSize: 5,
         title: 'углы падения',
-        hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-        vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
+        hAxis: {title: 'углы падения', minValue: 0, maxValue: 15},
+        vAxis: {title: 'начальные углы', minValue: 0, maxValue: 15},
         legend: 'none'
     };
 
@@ -54,22 +61,7 @@ let prepareMainTable = () => {
    }
 };
 
-let drawVisualization = () => {
-    for (let i = 0; i < tablesData.length; i++){
-        let wrapper = new google.visualization.ChartWrapper({
-            chartType: 'AreaChart',
-            dataTable: mainTablesData[i],
-            options: {'title': 'numbers', curveType: 'function',},
-            containerId: `main_chart_${i + 1}`
-        });
-        wrapper.draw();
-    }
-}
-
 let drawChart = () => {
-    document.querySelectorAll('.chart').forEach((chart) => {
-        chart.innerHTML = '';
-    });
     tablesData = [];
 
     let candleData = candle.data;
@@ -100,14 +92,11 @@ let drawChart = () => {
         mainTablesData[i][0][0] = 'x';
         mainTablesData[i][0][1] = 'y';
     }
-
-
     //google.charts.setOnLoadCallback(drawVisualization);
     if (candle.candle.angle < stopAngle) candle.turnRay(step, Deep, drawChart);
     else{
         angleData = candle.angls;
         google.charts.setOnLoadCallback(drawDiagram);
-        google.charts.setOnLoadCallback(drawVisualization);
     }
 };
 
@@ -130,14 +119,20 @@ let preDrawing = () => {
     ctx.moveTo(figure[figure.length - 1].x, figure[figure.length - 1].y);
     ctx.lineTo(figure[0].x, figure[0].y);
     ctx.stroke();
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(startPoint.x, startPoint.y, 4, 0, 2 * Math.PI);
+    ctx.fill();
 }
 
 let startRender = () => {
-    candle = new Candle(500, 500, 0, figure);
+    step = Math.PI / ((+(rays.value) - 1) / 2);
+    candle = new Candle(startPoint.x, startPoint.y, +(startRayAngle.value), figure);
     candle.createCanvas();
     candle.drawFigure();
     candle.renderFigure();
     prepareMainTable();
+    Deep = +(deepOfSearching.value)
     candle.drawNext(Deep, drawChart);
 }
 
@@ -150,10 +145,17 @@ renderF.onclick = function (){
 
 drawF.onclick = function (){
     isFigureDrawing = true;
+    figure = [];
+
 }
 
 Delete.onclick = function () {
     figure.pop();
+    preDrawing();
+}
+
+preset.onclick = function (){
+    figure = figures[preset.selectedIndex];
     preDrawing();
 }
 
@@ -166,16 +168,27 @@ reset.onclick = function () {
     candle = {};
     mainTablesData = [];
     isFigureDrawing = false;
+    startPoint = {
+        x: 500,
+        y: 500,
+    };
+    choosingStartPoint = false;
 }
 
 illustration.onclick = function (event){
+    if (choosingStartPoint){
+        isFigureDrawing = false;
+        startPoint.x = event.x;
+        startPoint.y = event.y;
+        choosingStartPoint = false;
+        preDrawing();
+    }
     if (isFigureDrawing){
-
-        figure.push({x: event.pageX,y: event.pageY});
-
-
+        figure.push({x: event.x,y: event.y});
         preDrawing();
     }
 }
 
-
+laser.onclick = function (){
+    choosingStartPoint = true;
+}

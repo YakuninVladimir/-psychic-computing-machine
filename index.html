@@ -11,28 +11,27 @@
 <body>
 <canvas id="illustration" width="1000" height="1000"></canvas>
 <div class="menu">
-    <p>выбрать пресеты</p>
-    <select class="form-select" aria-label="Default select example">
+    <p>выбрать шаблоны</p>
+    <select class="form-select" aria-label="Default select example" id="preset">
         <option selected>квадрат</option>
         <option value="1">тупоугольный треугольник</option>
         <option value="2">равнобедренный треугольник</option>
         <option value="3">равносторонний треугольник</option>
     </select>
+    <p>количество лучей</p>
+    <input type="text" id="rays" alt="32">
+    <p>стартовый угол(рад.)</p>
+    <input type="text" id="startRayAngle" alt="0">
+    <p>количество отражений</p>
+    <input type="text" id="deepOfSearching" alt="10">
+    <button class="btn" id="laser">установить стартовую точку</button>
     <button class="btn" id="drawF">нарисовать фигуру</button>
     <button class="btn" id="Delete">отменить точку</button>
     <button class="btn" id="reset">перезапуск</button>
+    <button class="btn" id="pause">пауза</button>
     <button class="btn" id="renderF">начать расчёт</button>
 </div>
-<div class="chart_wrap">
-    <div id="main_chart_1" class="main_chart" ></div>
-    <div id="main_chart_2" class="main_chart" ></div>
-    <div id="main_chart_3" class="main_chart" ></div>
-    <div id="main_chart_4" class="main_chart" ></div>
-    <div id="main_chart_5" class="main_chart" ></div>
-    <div id="main_chart_6" class="main_chart" ></div>
-    <div id="main_chart_7" class="main_chart" ></div>
-    <div id="main_chart_8" class="main_chart" ></div>
-</div>
+
 <div id = 'chart' class="angle_chart"></div>
 <script>
     require('./render.js');
