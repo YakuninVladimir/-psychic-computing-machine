@@ -11,7 +11,7 @@ let startPoint = {
   y: 500,
 };
 let tablesData = [];
-let stopAngle = Math.PI * 2;
+let stopAngle;
 let isFigureDrawing = false;
 let candle;
 let ctx = document.getElementById('illustration').getContext('2d');
@@ -126,6 +126,7 @@ let preDrawing = () => {
 }
 
 let startRender = () => {
+    stopAngle = Math.PI * 2 + +(startRayAngle.value);
     step = Math.PI / ((+(rays.value) - 1) / 2);
     candle = new Candle(startPoint.x, startPoint.y, +(startRayAngle.value), figure);
     candle.createCanvas();
@@ -146,7 +147,6 @@ renderF.onclick = function (){
 drawF.onclick = function (){
     isFigureDrawing = true;
     figure = [];
-
 }
 
 Delete.onclick = function () {
